@@ -1,0 +1,17 @@
+CREATE TABLE UserPortfolio (
+    KeyID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NOT NULL,
+    Stock VARCHAR(5) NOT NULL,
+    Quantity FLOAT NULL,
+    FirstBuyDate DATE NULL,
+    TotalInvestment FLOAT NULL,
+    CurrentPrice FLOAT NULL,
+    Profit FLOAT NULL,
+    TotalDividend FLOAT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+INSERT INTO UserPortfolio (UserID, Stock, Quantity, FirstBuyDate, TotalInvestment, CurrentPrice, Profit, TotalDividend)
+VALUES 
+(1, 'AAPL', 10, '2022-06-01', 1500, 1600, 6.67, 5.0),
+(2, 'TSLA', 5, '2023-02-20', 800, 950, 18.75, 2.5);
