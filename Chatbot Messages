@@ -1,0 +1,15 @@
+CREATE TABLE ChatbotMessages (
+    MessageID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NOT NULL,
+    ConvoID INT NOT NULL,
+    UserMessage TEXT NOT NULL,
+    ChatbotResponse TEXT NOT NULL,
+    Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+
+INSERT INTO ChatbotMessages (UserID, ConvoID, UserMessage, ChatbotResponse)
+VALUES 
+(1, 101, 'What is a stock?', 'A stock represents a share of ownership in a company.'),
+(2, 102, 'What is Bitcoin?', 'Bitcoin is a decentralized cryptocurrency.');
