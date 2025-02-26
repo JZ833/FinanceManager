@@ -1,0 +1,13 @@
+CREATE TABLE AllStocks (
+    StockID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Symbol VARCHAR(10) UNIQUE NOT NULL,
+    Sector INT NOT NULL
+);
+
+INSERT INTO AllStocks (Name, Symbol, Sector)
+VALUES 
+('Apple', 'AAPL', 1),
+('Tesla', 'TSLA', 2),
+('Amazon', 'AMZN', 1),
+('Microsoft', 'MSFT', 1);
