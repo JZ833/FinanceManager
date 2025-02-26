@@ -1,0 +1,10 @@
+CREATE TABLE Users (
+    UserID INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    PasswordHash VARCHAR(255) NOT NULL
+);
+
+
+INSERT INTO Users (Username, PasswordHash) VALUES
+('name1', 'hashed_password_1'),
+('name2', 'hashed_password_2');
