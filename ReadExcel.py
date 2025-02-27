@@ -25,6 +25,7 @@ def extract_data():
     """Extract the Stock and Quantity columns as arrays and print them."""
     # Normalize the "Stock" column
     df["Stock"] = df["Stock"].astype(str).str.strip().str.upper()
+    user_id = 1
     
     stock_data = df["Stock"].to_numpy()
     quantity_data = df["Quantity"].to_numpy()
@@ -45,7 +46,7 @@ def extract_data():
         print(f"{stock}:\t{quantity}\t{FixedDate[i]}")
 
         #insert into SQL DB
-        DB.AddToDatabase(stock, quantity, FixedDate[i], investment)
+        DB.AddToDatabase(user_id, stock, quantity, FixedDate[i], investment)
         print("\t\tAdded to DB\n")
 
         
