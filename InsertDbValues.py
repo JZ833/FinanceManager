@@ -18,96 +18,82 @@ connection = pymysql.connect(
 
 
 #define user portfolio (need login to identify) 
-table = "userportfolio1"
+table = "userportfolio"
 
 
-InsertSQL = f"""INSERT INTO `{table}` (`Symbol`, `Quantity`, `FirstBuyDate`, `TotalInvestment`)
+InsertSQL = f"""INSERT INTO `{table}` (`UserId`, `Symbol`, `Quantity`, `FirstBuyDate`, `TotalInvestment`)
+            VALUES(%s, %s, %s, %s, %s)
+            ON DUPLICATE KEY
+            UPDATE `Quantity` = VALUES(`Quantity`), `TotalInvestment` = VALUES(`TotalInvestment`)
+"""
+
+InsertSQL2 = f"""INSERT INTO `{table}` (`UserId`, `Symbol`, `Quantity`, `TotalInvestment`)
             VALUES(%s, %s, %s, %s)
             ON DUPLICATE KEY
             UPDATE `Quantity` = VALUES(`Quantity`), `TotalInvestment` = VALUES(`TotalInvestment`)
-
 """
-
-InsertSQL2 = f"""INSERT INTO `{table}` (`Symbol`, `Quantity`, `TotalInvestment`)
-            VALUES(%s, %s, %s)
-            ON DUPLICATE KEY
-            UPDATE `Quantity` = VALUES(`Quantity`), `TotalInvestment` = VALUES(`TotalInvestment`)
-
-"""
-
-
 
 CurrentQuantitySQL = f"""SELECT `Quantity`
                             FROM `{table}`
-                            WHERE `Symbol` = %s
-
+                            WHERE `UserId` = %s AND `Symbol` = %s
 """
 
 TotalInvestmentSQL = f"""
     SELECT `TotalInvestment`
     FROM `{table}`
-    WHERE `Symbol` = %s
-
+    WHERE `UserId` = %s AND `Symbol` = %s
 """
 
 RemoveRowSQL = f"""
     DELETE FROM `{table}`
-    WHERE `Symbol` = %s
+    WHERE `UserId` = %s AND `Symbol` = %s
 """
 
 GainSQL = f"""
     UPDATE `users`
     SET `RealizedGainLoss` = `RealizedGainLoss` + %s
-    WHERE `Id` = 1
+    WHERE `UserId` = %s 
     
 
 """
 
 
-def UpdateGain(gain):
+def UpdateGain(user_id, gain):
     with connection.cursor() as cursor:
-        cursor.execute(GainSQL, (gain,))
+        cursor.execute(GainSQL, (gain, user_id))
 
     connection.commit()
 
-
-
-def AddToDatabase(stock, quantity, date, investment):
+    
+def AddToDatabase(user_id, stock, quantity, date, investment):
     with connection.cursor() as cursor:
-        cursor.execute(InsertSQL, (stock, quantity, date, investment))
+        cursor.execute(InsertSQL, (user_id, stock, quantity, date, investment))
 
     connection.commit()
 
 #same func doesnt need date 
-def AddToDatabase2(stock, quantity, investment):
+def AddToDatabase2(user_id, stock, quantity, investment):
     with connection.cursor() as cursor:
-        cursor.execute(InsertSQL2, (stock, quantity, investment))
-
-    connection.commit()
-    
-def RemoveRow(stock):
-    with connection.cursor() as cursor:
-        cursor.execute(RemoveRowSQL, (stock,))
+        cursor.execute(InsertSQL2, (user_id, stock, quantity, investment))
 
     connection.commit()
 
-
-#Fetches the curent quantity of the given stock        
-def CurrentQuantity(stock):
+def RemoveRow(user_id, stock):
     with connection.cursor() as cursor:
-        cursor.execute(CurrentQuantitySQL, (stock,))
+        cursor.execute(RemoveRowSQL, (user_id, stock))
+
+    connection.commit()
+
+def CurrentQuantity(user_id, stock):
+    with connection.cursor() as cursor:
+        cursor.execute(CurrentQuantitySQL, (user_id, stock))
         result = cursor.fetchone()
-
         return result["Quantity"] if result and "Quantity" in result else 0 
 
-#Fetches the curent total investment of the given stock        
-def FetchTotalInvestment(stock):
+def FetchTotalInvestment(user_id, stock):
     with connection.cursor() as cursor:
-        cursor.execute(TotalInvestmentSQL, (stock,))
+        cursor.execute(TotalInvestmentSQL, (user_id, stock))
         result = cursor.fetchone()
-
         return result["TotalInvestment"] if result and "TotalInvestment" in result else 0
-
-    
   
 
