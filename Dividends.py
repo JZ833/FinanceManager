@@ -14,30 +14,33 @@ connection = pymysql.connect(
     host='localhost',
     user='root',
     password='',
-    database='TeamLlamas',
+    database='TeamLlama',
     port=3306,
     cursorclass=pymysql.cursors.DictCursor
 )
 
+user_id = 1
 
 def Dividends():
     FetchTickers = """
-        SELECT `Stock`, `FirstBuyDate`, `Quantity` FROM `portfoliodata`
+        SELECT `Symbol`, `FirstBuyDate`, `Quantity` 
+        FROM `userportfolio`
+        WHERE `UserId` = %s
     """
 
     UpdateDividends = """
-        UPDATE `portfoliodata`
-        SET `TotalDividend` = %s
-        WHERE `Stock` = %s
+        UPDATE `userportfolio`
+        SET `DividendsReceived` = %s
+        WHERE `Symbol` = %s AND `UserId` = %s
     """
     
     with connection.cursor() as cursor:
 
-        cursor.execute(FetchTickers)
+        cursor.execute(FetchTickers, (user_id,))
         result = cursor.fetchall()
 
         for row in result:
-            Stock = row['Stock'].strip()
+            Stock = row['Symbol'].strip()
             StartDate = row['FirstBuyDate']
             Quantity = row['Quantity'] 
 
@@ -59,7 +62,9 @@ def Dividends():
 
             total_dividends = total_dividends * Quantity
 
-            cursor.execute(UpdateDividends, (total_dividends, Stock))
+            cursor.execute(UpdateDividends, (total_dividends, Stock, user_id))
             print(f"{Stock}: Dividends Updated in SQL") 
 
         connection.commit()
+
+Dividends()
