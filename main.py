@@ -22,7 +22,7 @@ def AskUser():
 
 UserInput = AskUser()
 
-
+user_id = 1
 
 while UserInput > 0:
 
@@ -39,7 +39,7 @@ while UserInput > 0:
         investment = input()
 
         #Send to DB
-        DB.AddToDatabase(Symbol, Quantity, date, investment)
+        DB.AddToDatabase(user_id, Symbol, Quantity, date, investment)
         
         print(f"Added {Symbol} Stock to DB")
         
@@ -58,7 +58,7 @@ while UserInput > 0:
         Quantity = float(input())
 
         #Fetchdata
-        OldQuantity = DB.CurrentQuantity(Symbol)
+        OldQuantity = DB.CurrentQuantity(user_id, Symbol)
         Investment = DB.FetchTotalInvestment(Symbol)
         CurrentPrice = GetPrice.get_stock_price(Symbol)
 
@@ -78,12 +78,12 @@ while UserInput > 0:
             NewInvestment = Investment - (SoldQuantity * OldCostBasis)
 
             #save gain to UserDB
-            DB.UpdateGain(Gain)
+            DB.UpdateGain(user_id, Gain)
             
             
 
             #Update Total investment and quantity
-            DB.AddToDatabase2(Symbol, Quantity, NewInvestment)
+            DB.AddToDatabase2(user_id, Symbol, Quantity, NewInvestment)
 
             print(f"Updated {Symbol}: New Quantity = {Quantity}, New Investment = ${NewInvestment:.2f}")
             print(f"Realized Gain from Sell: ${Gain:.2f}")
@@ -94,19 +94,19 @@ while UserInput > 0:
             NewInvestment = float(input())
             NewInvestment += Investment
             #Update Total investment and Quantity
-            DB.AddToDatabase2(Symbol, Quantity, NewInvestment)
+            DB.AddToDatabase2(user_id, Symbol, Quantity, NewInvestment)
             
             
             
     if UserInput == 4:
-        SellStock = str(input("Enter Stock Name: "))
+        Symbol = str(input("Enter Stock Name: "))
         CurrentPrice =  GetPrice.get_stock_price(Symbol)
-        TotalInvestment = DB.FetchTotalInvestment(SellStock)
-        Quantity = DB.CurrentQuantity(SellStock)
+        TotalInvestment = DB.FetchTotalInvestment(user_id, Symbol)
+        Quantity = DB.CurrentQuantity(user_id, Symbol)
         TradeGain = (CurrentPrice * Quantity) - TotalInvestment
-        DB.UpdateGain(TradeGain) 
-        DB.RemoveRow(SellStock)
-        print(f"Removed {SellStock} from database, realized gain/loss: {TradeGain}\n")
+        DB.UpdateGain(user_id, TradeGain) 
+        DB.RemoveRow(user_id, Symbol)
+        print(f"Removed {Symbol} from database, realized gain/loss: {TradeGain}\n")
         
         
         
