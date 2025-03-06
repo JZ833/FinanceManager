@@ -1,9 +1,7 @@
 import pymysql.cursors
 import datetime as dt
 import pandas as pd
-from matplotlib import style
-import matplotlib.pyplot as plt
-
+import plotly.express as px
 
 # Connect to the database
 connection = pymysql.connect(
@@ -15,13 +13,9 @@ connection = pymysql.connect(
     cursorclass=pymysql.cursors.DictCursor
 )
 
-
-style.use('ggplot')
-
 user_id = 1
 symbolList = []
 weightList = [] 
-
 
 def CalculateWeights():
     FetchTickers = """
@@ -32,25 +26,23 @@ def CalculateWeights():
     TotalInvestmentSQL = """
         SELECT SUM(`TotalInvestment`) FROM `userportfolio`
         WHERE `UserId` = %s
-
     """
-
     
     with connection.cursor() as cursor:
-        #Fetch Sum of all investments
-        cursor.execute(TotalInvestmentSQL, (user_id,) )
+        # Fetch sum of all investments
+        cursor.execute(TotalInvestmentSQL, (user_id,))
         TotalInvestment = cursor.fetchone()["SUM(`TotalInvestment`)"] or 0
-        #Fetch Stock symbols and investment in that stock 
+
+        # Fetch stock symbols and investment in each stock
         cursor.execute(FetchTickers, (user_id,))
         result = cursor.fetchall()
         
-        #checks if stocks in user database
+        # Check if stocks exist for the user
         if not result:
             print("No stocks found in the database.")
             return
         
         for row in result:
-            #Initialize values and calculate weights 
             symbol = row['Symbol'].strip()
             print(f"Fetching data for symbol: {symbol}")
             symbolList.append(symbol)
@@ -60,15 +52,18 @@ def CalculateWeights():
             print(f"Symbol: {symbol}\nWeight: {Weight}")
             weightList.append(Weight)
 
-            
-
 def PieChart():
-    # Create dataframe for plotting
+    # Create DataFrame for plotting
     df = pd.DataFrame({'Symbol': symbolList, 'Weight': weightList})
-    plt.pie(df['Weight'], labels=df['Symbol'], autopct='%1.1f%%')
-    plt.title('Investment Distribution')
-    plt.ylabel("")  # Optional: removing the ylabel
-    plt.show()  # Ensure this line calls plt.show() with parentheses to display the chart
+    
+    # Create an interactive pie chart using Plotly Express
+    fig = px.pie(df, 
+                 names='Symbol', 
+                 values='Weight',
+                 title='Investment Distribution',
+                 hole=0)  # Remove or set a value for a donut chart look
+    
+    fig.show()
 
 # Call the functions
 CalculateWeights()
