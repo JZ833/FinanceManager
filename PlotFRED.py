@@ -9,12 +9,12 @@ FredKey = "db3bf9c729b0ac45151b940bcfb1179c"
 fred = Fred(api_key=FredKey)
 
 # Define the start and end dates
-start = dt.datetime(2023, 1, 1)
+start = dt.datetime(1960, 1, 1)
 end = dt.datetime.now()
 
 # Fetch Historical data for bonds (spread between 10Y and 2Y yields)
 def get_Bond_data(): 
-    data = fred.get_series('T10Y2Y', start_date=start, end_date=end)
+    data = fred.get_series('T10Y2Y', observation_start=start, observation_end=end)
     dfBond = pd.DataFrame(data, columns=['10 Year Bond - 2 Year Bond'])
     dfBond.index.name = 'Date'
     print(dfBond)
@@ -22,7 +22,7 @@ def get_Bond_data():
 
 # Fetch Historical data for the Federal Funds Rate
 def get_FRED_data(): 
-    data = fred.get_series('FEDFUNDS', start_date=start, end_date=end)
+    data = fred.get_series('FEDFUNDS',observation_start=start, observation_end=end)
     dfFRED = pd.DataFrame(data, columns=['Federal Funds Rate'])
     dfFRED.index.name = 'Date'
     print(dfFRED)
@@ -30,7 +30,7 @@ def get_FRED_data():
 
 # Fetch Historical data for 30-Year Mortgage Rates
 def get_Mortgage_data(): 
-    data = fred.get_series('MORTGAGE30US', start_date=start, end_date=end)
+    data = fred.get_series('MORTGAGE30US', observation_start=start, observation_end=end)
     dfMortgage = pd.DataFrame(data, columns=['30 Year Mortgage Rate'])
     dfMortgage.index.name = 'Date'
     print(dfMortgage)
