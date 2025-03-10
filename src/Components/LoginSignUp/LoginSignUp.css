@@ -1,3 +1,7 @@
+@tailwind base; 
+@tailwind components; 
+@tailwind utilities; 
+
 .container {
     display: flex; 
     flex-direction: column; 
@@ -6,6 +10,7 @@
     width: 600px; 
     background: #fff; 
     padding-bottom: 30px;
+    align-content: center; 
 }
 
 .header{
@@ -18,7 +23,7 @@
 }
 
 .text {
-    color: #3c009d; 
+    color: #0006b4; 
     font-size: 48px; 
     font-weight: 700; 
 }
@@ -26,7 +31,7 @@
 .underline {
     width: 61px;
     height: 6px; 
-    background: #3c009d; 
+    background: #00039d; 
     border-radius: 9px; 
 }
 
@@ -69,7 +74,7 @@
 }
 
 .forgot-password span {
-    color: #4c00b4; 
+    color: #0006b4; 
     cursor: pointer; 
 }
 
@@ -86,7 +91,7 @@
     width: 220px; 
     height: 59px; 
     color: #fff; 
-    background: #4c00b4; 
+    background: #0006b4; 
     border-radius: 50px;
     font-size: 19px;
     font-weight: 700; 

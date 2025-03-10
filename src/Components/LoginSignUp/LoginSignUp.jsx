@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react' 
 import './LoginSignUp.css'
 
-const LoginSignUp = () => {
+export default function LoginSignUp() {
 
     const [action,setAction] = useState("Login"); 
-
 
     return ( 
         <div className='container'>
@@ -13,14 +12,21 @@ const LoginSignUp = () => {
                 <div className="underline"></div>
             </div>
             <div className="inputs">
-                <div className="input">
-                    <img src="" alt=""/>
-                    <input type="text" placeholder="Name"/>
-                </div>
+                {action === "Sign Up" && (
+                    <div className="input">
+                        <img src="" alt=""/>
+                        <input type="text" placeholder="First Name"/>
+                    </div>)}
+
+                {action === "Sign Up" && (
+                    <div className="input">
+                        <img src="" alt=""/>
+                        <input type="text" placeholder="Last Name"/>
+                    </div>)}
 
                 <div className="input">
                     <img src="" alt="" />
-                    <input type="email" placeholder='Email Id' /> 
+                    <input type="email" placeholder='Email' /> 
                 </div>
 
                 <div className="input">
@@ -38,5 +44,3 @@ const LoginSignUp = () => {
         </div>
     )
 }
-
-export default LoginSignUp; 
