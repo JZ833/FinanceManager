@@ -6,14 +6,16 @@ import pandas as pd
 import ReadExcel
 import InsertDbValues as DB
 import GetPrice
+import InsertCrypto
 
 
 def AskUser():
     print("""\nInput a Number, or 0 to Exit
             \n1.Insert One stock into database
-            \n2.Insert Excel into database
+            \n2.Insert Stock Excel into database
             \n3.Update Stock quantity in database (log buy or sell)
             \n4.Remove Stock from database
+            \n5.Insert Crypto Excel into database 
             """)
 
     UserInput = int(input())
@@ -108,6 +110,8 @@ while UserInput > 0:
         DB.RemoveRow(user_id, Symbol)
         print(f"Removed {Symbol} from database, realized gain/loss: {TradeGain}\n")
         
+    if UserInput == 5:
+        InsertCrypto.extract_data()
         
         
         
