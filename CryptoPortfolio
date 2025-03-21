@@ -2,17 +2,18 @@ CREATE TABLE CryptoPortfolio (
     CryptoID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT NOT NULL,
     Stock VARCHAR(50) NOT NULL,
-    Quantity FLOAT NULL,
-    FirstBuyDate DATE NULL,
-    TotalInvestment FLOAT NULL,
-    CurrentPrice FLOAT NULL,
-    Profit FLOAT NULL,
-    TotalDividend FLOAT NULL,
+    Quantity FLOAT DEFAULT 0,
+    FirstBuyDate DATE,
+    TotalInvestment FLOAT DEFAULT 0,
+    CurrentPrice FLOAT DEFAULT 0,
+    Profit FLOAT DEFAULT 0,
+    TotalDividend FLOAT DEFAULT 0,
+    UNIQUE KEY unique_crypto (UserID, Stock),
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
-
-INSERT INTO CryptoPortfolio (UserID, Stock, Quantity, FirstBuyDate, TotalInvestment, CurrentPrice, Profit, TotalDividend)
-VALUES 
-(1, 'BTC', 0.01, '2022-01-10', 35000, 40000, 14.3, 0.0),
-(2, 'ETH', 0.5, '2023-05-15', 1500, 1800, 20.0, 0.0);
+INSERT INTO CryptoPortfolio (UserID, Stock, Quantity, FirstBuyDate, TotalInvestment)
+VALUES (1, 'BTC', 0.02, '2024-01-10', 40000)
+ON DUPLICATE KEY UPDATE
+    Quantity = VALUES(Quantity),
+    TotalInvestment = VALUES(TotalInvestment);
